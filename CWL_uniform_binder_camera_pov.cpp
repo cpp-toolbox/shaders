@@ -24,8 +24,8 @@
  * \param character_position
  */
 void bind_CWL_matrix_uniforms_camera_pov(GLuint shader_program_id, int screen_width, int screen_height,
-                                         glm::vec3 character_position, Camera camera, float fov,
-                                         float render_distance) {
+                                         glm::vec3 character_position, glm::mat4 local_to_world, Camera camera,
+                                         float fov, float render_distance) {
 
     // don't forget to enable shader before setting uniforms
     glUseProgram(shader_program_id);
@@ -41,9 +41,6 @@ void bind_CWL_matrix_uniforms_camera_pov(GLuint shader_program_id, int screen_wi
         glm::lookAt(character_position, character_position + camera.look_direction, camera.up_direction);
     GLint world_to_camera_uniform_location = glGetUniformLocation(shader_program_id, "world_to_camera");
     glUniformMatrix4fv(world_to_camera_uniform_location, 1, GL_FALSE, glm::value_ptr(world_to_camera));
-
-    // render the loaded model
-    glm::mat4 local_to_world = glm::mat4(1.0f);
 
     GLint local_to_world_uniform_location = glGetUniformLocation(shader_program_id, "local_to_world");
     glUniformMatrix4fv(local_to_world_uniform_location, 1, GL_FALSE, glm::value_ptr(local_to_world));

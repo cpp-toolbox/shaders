@@ -30,6 +30,7 @@
  * \param character_position
  */
 void bind_CWL_matrix_uniforms_camera_pov(GLuint shader_program_id, int screen_width, int screen_height,
-                                         glm::vec3 character_position, Camera camera, float fov, float render_distance);
+                                         glm::vec3 character_position, glm::mat4 local_to_world, Camera camera,
+                                         float fov, float render_distance);
 
 #endif // CWL_UNIFORM_BINDER_CAMERA_POV_HPP
