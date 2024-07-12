@@ -1,5 +1,6 @@
 #include "CWL_uniform_binder_camera_pov.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
 /**
  *
@@ -33,6 +34,8 @@ void bind_CWL_matrix_uniforms_camera_pov(GLuint shader_program_id, int screen_wi
     // view/projection transformations
     glm::mat4 camera_to_clip =
         glm::perspective(glm::radians(fov), (float)screen_width / (float)screen_height, 0.1f, render_distance);
+
+    // TODO: swap order of these so that it mirrors the transformation application order
 
     GLint camera_to_clip_uniform_location = glGetUniformLocation(shader_program_id, "camera_to_clip");
     glUniformMatrix4fv(camera_to_clip_uniform_location, 1, GL_FALSE, glm::value_ptr(camera_to_clip));

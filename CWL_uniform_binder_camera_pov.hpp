@@ -1,7 +1,7 @@
 #ifndef CWL_UNIFORM_BINDER_CAMERA_POV_HPP
 #define CWL_UNIFORM_BINDER_CAMERA_POV_HPP
 
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "glm/ext/vector_float3.hpp"
