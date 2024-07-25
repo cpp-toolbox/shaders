@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "glm/ext/vector_float3.hpp"
-#include "../../interaction/camera/camera.hpp"
+#include "sbpt_generated_includes.hpp"
 
 /**
  *
