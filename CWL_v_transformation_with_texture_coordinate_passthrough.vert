@@ -1,8 +1,8 @@
-#version 330
+#version 330 core
 
-attribute vec3 position;
-attribute vec3 normal;
-attribute vec2 passthrough_texture_coordinate;
+in vec3 position;
+in vec3 normal;
+in vec2 passthrough_texture_coordinate;
 
 uniform mat4 local_to_world;
 uniform mat4 world_to_camera;
