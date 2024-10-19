@@ -1,7 +1,6 @@
 #version 330 core
 
 in vec3 position;
-in vec3 normal;
 in vec2 passthrough_texture_coordinate;
 
 uniform mat4 local_to_world;
