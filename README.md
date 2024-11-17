@@ -42,3 +42,19 @@ then the vertex will be rendered, otherwise it is outside of view.
 
 After the last transformation is complete, all vertices are considered to be in clip space and
 will be visible or not based on the above
+
+## Specific Shaders
+
+### ubos
+
+when a shader uses ubos then you should put something like this in your code:
+
+```cpp
+    glm::mat4 modelMatrices[100];
+    update_matrices(0.0, modelMatrices);
+
+    glGenBuffers(1, &uboModelMatrices);
+    glBindBuffer(GL_UNIFORM_BUFFER, uboModelMatrices);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(modelMatrices), modelMatrices, GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboModelMatrices); // Bind to binding point 0
+```
