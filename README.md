@@ -50,11 +50,25 @@ will be visible or not based on the above
 when a shader uses ubos then you should put something like this in your code:
 
 ```cpp
-    glm::mat4 modelMatrices[100];
-    update_matrices(0.0, modelMatrices);
+GLuint ltw_matrices_gl_name;
+glm::mat4 ltw_matrices[1024];
 
-    glGenBuffers(1, &uboModelMatrices);
-    glBindBuffer(GL_UNIFORM_BUFFER, uboModelMatrices);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(modelMatrices), modelMatrices, GL_STATIC_DRAW);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboModelMatrices); // Bind to binding point 0
+// initialize all matrices to identity matrices
+for (int i = 0; i < 1024; ++i) {
+    ltw_matrices[i] = glm::mat4(1.0f);
+}
+
+glGenBuffers(1, &ltw_matrices_gl_name);
+glBindBuffer(GL_UNIFORM_BUFFER, ltw_matrices_gl_name);
+glBufferData(GL_UNIFORM_BUFFER, sizeof(ltw_matrices), ltw_matrices, GL_STATIC_DRAW);
+glBindBufferBase(GL_UNIFORM_BUFFER, 0, ltw_matrices_gl_name);
+```
+
+and then later in a loop you can have
+
+```cpp
+update_matrices(currentTime, modelMatrices);
+glBindBuffer(GL_UNIFORM_BUFFER, uboModelMatrices);
+glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(modelMatrices), modelMatrices);
+glBindBuffer(GL_UNIFORM_BUFFER, 0);
 ```
