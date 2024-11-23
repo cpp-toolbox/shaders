@@ -72,3 +72,5 @@ glBindBuffer(GL_UNIFORM_BUFFER, uboModelMatrices);
 glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(modelMatrices), modelMatrices);
 glBindBuffer(GL_UNIFORM_BUFFER, 0);
 ```
+
+note that we don't have to this in the context of a vao, because any shader can have access to the ubo via the bind point
