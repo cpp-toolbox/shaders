@@ -26,17 +26,22 @@ void main() {
     bone_weights = passthrough_bone_weights;
     packed_texture_index = passthrough_packed_texture_index;
 
-    // only doing 4 here because we set that as the max number of bones that could influence a single vertex.
-    mat4 weighted_averge_bone_animation_transform = bone_animation_transforms[bone_ids[0]] * bone_weights[0];
-    weighted_averge_bone_animation_transform     += bone_animation_transforms[bone_ids[1]] * bone_weights[1];
-    weighted_averge_bone_animation_transform     += bone_animation_transforms[bone_ids[2]] * bone_weights[2];
-    weighted_averge_bone_animation_transform     += bone_animation_transforms[bone_ids[3]] * bone_weights[3];
+    vec4 animated_position;
 
-    weighted_averge_bone_animation_transform = weighted_averge_bone_animation_transform   * 0.25f;  
+    if (bone_weights.x + bone_weights.y + bone_weights.z + bone_weights.w == 0.0) {
+        animated_position = vec4(xyz_position, 1.0);
+    } else {
+        // Apply weighted average bone animation transform
+        mat4 weighted_average_bone_animation_transform = bone_animation_transforms[bone_ids[0]] * bone_weights[0];
+        weighted_average_bone_animation_transform     += bone_animation_transforms[bone_ids[1]] * bone_weights[1];
+        weighted_average_bone_animation_transform     += bone_animation_transforms[bone_ids[2]] * bone_weights[2];
+        weighted_average_bone_animation_transform     += bone_animation_transforms[bone_ids[3]] * bone_weights[3];
 
-    mat4 animation_transform = weighted_averge_bone_animation_transform;
-    vec4 animated_position = animation_transform * vec4(xyz_position, 1.0);
+        weighted_average_bone_animation_transform = weighted_average_bone_animation_transform * 0.25f;  
 
-    // CWL v
+        animated_position = weighted_average_bone_animation_transform * vec4(xyz_position, 1.0);
+    }
+
+    // Calculate final position in clip space
     gl_Position = camera_to_clip * world_to_camera * local_to_world * animated_position;
 }
