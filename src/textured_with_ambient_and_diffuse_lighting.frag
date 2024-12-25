@@ -1,12 +1,9 @@
 #version 330 core
 
-in vec2 texture_coordinate;
-// texture packer
-flat in int packed_texture_index;
-uniform sampler2DArray packed_textures;
-//lighting
-in vec3 world_space_position; 
 in vec3 normal;
+in vec2 texture_coordinate;
+
+in vec3 world_space_position; 
 
 uniform sampler2D texture_sampler;
 uniform float ambient_light_strength;
@@ -19,7 +16,7 @@ out vec4 frag_color;
 void main() {
 
     // ambient light setup
-    vec4 sampled_texture = texture(packed_textures, vec3(texture_coordinate, packed_texture_index));
+    vec4 sampled_texture = texture(texture_sampler, texture_coordinate);
     vec3 ambient_light_multiplier = ambient_light_strength * ambient_light_color;
 
     // diffuse light setup

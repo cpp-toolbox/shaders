@@ -1,5 +1,3 @@
-#version 330 core
-
 struct DirLight {
     vec3 direction;
 	
@@ -35,54 +33,13 @@ struct SpotLight {
     vec3 specular;
 };
 
-#define NR_POINT_LIGHTS 4
-
-in vec2 texture_coordinate;
-// texture packer
-flat in int packed_texture_index;
-uniform sampler2DArray packed_textures;
-//lighting
-in vec3 world_space_position; 
-in vec3 normal;
-
-uniform vec3 view_pos;
-uniform DirLight dir_light;
-uniform PointLight point_lights[NR_POINT_LIGHTS];
-uniform SpotLight spot_light;
-
-out vec4 frag_color;
-
 // function prototypes
-vec4 calc_dir_light(DirLight light, vec3 normal, vec3 view_dir);
-vec4 calc_point_light(PointLight light, vec3 normal, vec3 fragPos, vec3 view_dir);
-vec4 calc_spot_light(SpotLight light, vec3 normal, vec3 fragPos, vec3 view_dir);
-
-void main() {
-
-    // properties
-    vec3 norm = normalize(normal);
-    vec3 view_dir = normalize(view_pos - world_space_position);
-    
-    // == =====================================================
-    // Our lighting is set up in 3 phases: directional, point lights and an optional flashlight
-    // For each phase, a calculate function is defined that calculates the corresponding color
-    // per lamp. In the main() function we take all the calculated colors and sum them up for
-    // this fragment's final color.
-    // == =====================================================
-    // phase 1: directional lighting
-    vec4 result = calc_dir_light(dir_light, norm, view_dir);
-    // phase 2: point lights
-    for(int i = 0; i < NR_POINT_LIGHTS; i++)
-        result += calc_point_light(point_lights[i], norm, world_space_position, view_dir);    
-    // phase 3: spot light
-    result += calc_spot_light(spot_light, norm, world_space_position, view_dir);    
-    
-    frag_color = result;
-
-}
+// vec4 calc_dir_light(DirLight light, vec3 normal, vec3 view_dir);
+// vec4 calc_point_light(PointLight light, vec3 normal, vec3 fragPos, vec3 view_dir);
+// vec4 calc_spot_light(SpotLight light, vec3 normal, vec3 fragPos, vec3 view_dir);
 
 // calculates the color when using a directional light.
-vec4 calc_dir_light(DirLight light, vec3 normal, vec3 view_dir)
+vec4 calc_dir_light(DirLight light, vec3 normal, vec3 view_dir, vec4 tex_color)
 {
     vec3 light_dir = normalize(-light.direction);
     
@@ -94,7 +51,6 @@ vec4 calc_dir_light(DirLight light, vec3 normal, vec3 view_dir)
     float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32.0f);
     
     // Sample texture (RGBA) to get color and alpha
-    vec4 tex_color = texture(packed_textures, vec3(texture_coordinate, packed_texture_index));
     vec3 base_color = tex_color.rgb;
     float alpha = tex_color.a;  // Opacity
 
@@ -109,7 +65,7 @@ vec4 calc_dir_light(DirLight light, vec3 normal, vec3 view_dir)
     return vec4(final_color, alpha);
 }
 
-vec4 calc_point_light(PointLight light, vec3 normal, vec3 fragPos, vec3 view_dir)
+vec4 calc_point_light(PointLight light, vec3 normal, vec3 fragPos, vec3 view_dir, vec4 tex_color)
 {
     vec3 light_dir = normalize(light.position - fragPos);
     
@@ -125,7 +81,6 @@ vec4 calc_point_light(PointLight light, vec3 normal, vec3 fragPos, vec3 view_dir
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     
     // Sample texture (RGBA) to get color and alpha
-    vec4 tex_color = texture(packed_textures, vec3(texture_coordinate, packed_texture_index));
     vec3 base_color = tex_color.rgb;
     float alpha = tex_color.a;  // Opacity
     
@@ -146,7 +101,7 @@ vec4 calc_point_light(PointLight light, vec3 normal, vec3 fragPos, vec3 view_dir
     return vec4(final_color, alpha);
 }
 
-vec4 calc_spot_light(SpotLight light, vec3 normal, vec3 fragPos, vec3 view_dir)
+vec4 calc_spot_light(SpotLight light, vec3 normal, vec3 fragPos, vec3 view_dir, vec4 tex_color)
 {
     vec3 light_dir = normalize(light.position - fragPos);
     
@@ -167,7 +122,6 @@ vec4 calc_spot_light(SpotLight light, vec3 normal, vec3 fragPos, vec3 view_dir)
     float intensity = clamp((theta - light.outer_cut_off) / epsilon, 0.0, 1.0);
 
     // Sample texture (RGBA) to get color and alpha
-    vec4 tex_color = texture(packed_textures, vec3(texture_coordinate, packed_texture_index));
     vec3 base_color = tex_color.rgb;
     float alpha = tex_color.a;  // Opacity
     
