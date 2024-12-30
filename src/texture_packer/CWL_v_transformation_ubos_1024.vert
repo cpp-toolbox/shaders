@@ -15,8 +15,7 @@ layout(std140) uniform LtwMatrices {
 };
 
 void main() {
-    texture_coordinate = passthrough_texture_coordinate;
-    packed_texture_index = passthrough_packed_texture_index;
+    texture_packer_passthrough(passthrough_texture_coordinate, passthrough_packed_texture_index, texture_coordinate, packed_texture_index);
 
     gl_Position = camera_to_clip * world_to_camera * local_to_world_matrices[local_to_world_index] * vec4(xyz_position, 1.0);
 }

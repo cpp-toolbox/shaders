@@ -2,15 +2,13 @@
 
 #include "lighting.glsl"
 
-#define NR_POINT_LIGHTS 4
-
-in vec2 texture_coordinate;
-
 // texture packer
+in vec2 texture_coordinate;
 flat in int packed_texture_index;
 uniform sampler2DArray packed_textures;
 
-//lighting
+// lighting
+#define NR_POINT_LIGHTS 4
 in vec3 world_space_position; 
 in vec3 normal;
 
