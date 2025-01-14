@@ -1,11 +1,7 @@
 #version 330 core
 
 #include "lighting.glsl"
-
-// texture packer
-in vec2 texture_coordinate;
-flat in int packed_texture_index;
-uniform sampler2DArray packed_textures;
+#include "packed_texture_sampling.glsl"
 
 // lighting
 #define NR_POINT_LIGHTS 4
@@ -18,7 +14,6 @@ uniform PointLight point_lights[NR_POINT_LIGHTS];
 uniform SpotLight spot_light;
 
 out vec4 frag_color;
-
 void main() {
 
     // properties
@@ -32,7 +27,13 @@ void main() {
     // this fragment's final color.
     // == =====================================================
     // phase 1: directional lighting
-    vec4 tex_color = texture(packed_textures, vec3(texture_coordinate, packed_texture_index));
+    vec4 tex_color = sample_packed_texture(
+        packed_textures, 
+        texture_coordinate, 
+        packed_texture_index, 
+        packed_texture_bounding_boxes, 
+        packed_texture_bounding_box_index
+    );
     vec4 result = calc_dir_light(dir_light, norm, view_dir, tex_color);
     // phase 2: point lights
     for(int i = 0; i < NR_POINT_LIGHTS; i++)

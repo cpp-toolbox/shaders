@@ -9,7 +9,7 @@
 in vec3 xyz_position;
 
 void main() {
-    texture_packer_passthrough(passthrough_texture_coordinate, passthrough_packed_texture_index, texture_coordinate, packed_texture_index);
+    texture_packer_passthrough(passthrough_texture_coordinate, passthrough_packed_texture_index, passthrough_packed_texture_bounding_box_index, texture_coordinate, packed_texture_index, packed_texture_bounding_box_index);
 
     mat4 animation_transform = compute_animation_transform(passthrough_bone_ids, passthrough_bone_weights);
     vec4 animated_position = animation_transform * vec4(xyz_position, 1.0);

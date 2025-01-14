@@ -1,12 +1,15 @@
 #version 330 core
 
-in vec2 texture_coordinate;
-flat in int packed_texture_index;
-
-uniform sampler2DArray packed_textures;
+#include "packed_texture_sampling.glsl"
 
 out vec4 frag_color;
 
 void main() {
-    frag_color = texture(packed_textures, vec3(texture_coordinate, packed_texture_index));
+    frag_color = sample_packed_texture(
+        packed_textures, 
+        texture_coordinate, 
+        packed_texture_index, 
+        packed_texture_bounding_boxes, 
+        packed_texture_bounding_box_index
+    );
 }
