@@ -31,7 +31,7 @@ void main() {
         packed_textures, 
         texture_coordinate, 
         packed_texture_index, 
-        packed_texture_bounding_boxes, 
+        // packed_texture_bounding_boxes, 
         packed_texture_bounding_box_index
     );
     vec4 result = calc_dir_light(dir_light, norm, view_dir, tex_color);

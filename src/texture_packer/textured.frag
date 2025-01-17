@@ -9,7 +9,7 @@ void main() {
         packed_textures, 
         texture_coordinate, 
         packed_texture_index, 
-        packed_texture_bounding_boxes, 
+        // packed_texture_bounding_boxes, 
         packed_texture_bounding_box_index
     );
 }

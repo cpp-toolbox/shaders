@@ -3,9 +3,24 @@ flat in int packed_texture_index;
 flat in int packed_texture_bounding_box_index;
 
 uniform sampler2DArray packed_textures;
-#define MAX_NUM_TEXTURES 1024
-uniform vec4 packed_texture_bounding_boxes[MAX_NUM_TEXTURES];
+// the next lines are really bad and cause stuff to break 
+// because running out of uniform space, instead 
+// use a texture thing: https://stackoverflow.com/questions/51781227/estimate-number-of-registers-required-in-glsl-shader
 
+// this is an image which stores the data about the bounding boxes of the packed textures in the containers
+uniform sampler1D packed_texture_bounding_boxes;
+//
+// note that before we used to do this, but it caused an array about using up too many constant registers
+// which come from using too many uniforms, so we no longer do the below, but instead the above.
+// 
+#define MAX_NUM_TEXTURES 1024
+// uniform vec4 packed_texture_bounding_boxes[MAX_NUM_TEXTURES];
+
+
+// Access bounding box using the texture
+vec4 get_bounding_box(int index) {
+    return texture( packed_texture_bounding_boxes, float(index) / float(MAX_NUM_TEXTURES));
+}
 
 /**
  * Wraps a texture coordinate (tc) to stay within the given bounding box.
@@ -47,9 +62,8 @@ vec4 sample_packed_texture(
     sampler2DArray texture_array,
     vec2 tex_coord,
     int texture_index,
-    vec4 bounding_boxes[MAX_NUM_TEXTURES],
     int bounding_box_index
 ) {
-    vec4 bbox = bounding_boxes[bounding_box_index];
+    vec4 bbox = get_bounding_box(bounding_box_index);
     return texture(texture_array, vec3(wrap_texture_coordinate(tex_coord, bbox), texture_index));
 }
