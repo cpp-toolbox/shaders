@@ -1,11 +1,8 @@
 #version 330 core
-
-// This shader draws vertices at an absolute location rather than using a
-// local to world coordinate transformation
-
 in vec3 xyz_position;
+
+#include "aspect_ratio_correction.glsl"
  
-void main()
-{
-    gl_Position = vec4(xyz_position, 1.0f);
+void main() {
+    gl_Position = vec4(scale_position_by_aspect_ratio(xyz_position, aspect_ratio), 1.0f);
 }
