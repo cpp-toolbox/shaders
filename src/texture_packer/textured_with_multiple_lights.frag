@@ -8,7 +8,7 @@
 in vec3 world_space_position; 
 in vec3 normal;
 
-uniform vec3 view_pos;
+uniform vec3 camera_position;
 uniform DirLight dir_light;
 uniform PointLight point_lights[NR_POINT_LIGHTS];
 uniform SpotLight spot_light;
@@ -18,7 +18,7 @@ void main() {
 
     // properties
     vec3 norm = normalize(normal);
-    vec3 view_dir = normalize(view_pos - world_space_position);
+    vec3 view_dir = normalize(camera_position - world_space_position);
     
     // == =====================================================
     // Our lighting is set up in 3 phases: directional, point lights and an optional flashlight
